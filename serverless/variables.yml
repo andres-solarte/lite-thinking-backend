@@ -1,2 +1,5 @@
 amplify-app-name: sav-mvp-${self:provider.stage}-lite-thinking
 backend-company-table-name: ${self:service}-dynamodb-${self:provider.stage}-table-company
+
+companies-sns-topic-name: ${self:service}-sns-${self:provider.stage}-topic-mechanic-request
+companies-sns-topic-arn: arn:aws:sns:${aws:region}:${aws:accountId}:${self:custom.variables.companies-sns-topic-name}

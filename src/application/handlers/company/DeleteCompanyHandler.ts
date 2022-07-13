@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 import DeleteCompanyUseCase from "../../../domain/useCases/DeleteCompanyUseCase";
 import CompanyRepository from "../../../infrastructure/repositories/CompanyRepository";
+import MesaggingService from "../../../infrastructure/services/MesaggingService";
 import corsHeaders from "../../constants/CorsHeaders";
 
 export const handler = async (event: APIGatewayProxyEvent) => {
@@ -10,7 +11,8 @@ export const handler = async (event: APIGatewayProxyEvent) => {
     if(!jsonBody.id) throw new Error('Id is required')
 
     const companyAdapter = new CompanyRepository()
-    const useCase = new DeleteCompanyUseCase(companyAdapter)
+    const mesaggingAdapter = new MesaggingService()
+    const useCase = new DeleteCompanyUseCase(companyAdapter, mesaggingAdapter)
 
     await useCase.execute(jsonBody.id)
 

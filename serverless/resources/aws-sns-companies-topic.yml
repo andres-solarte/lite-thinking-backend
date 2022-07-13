@@ -1,0 +1,9 @@
+Resources:
+  CompaniesSnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      KmsMasterKeyId: alias/aws/sns
+      Tags:
+        - Key: Name
+          Value: ${self:custom.variables.companies-sns-topic-name}
+      TopicName: ${self:custom.variables.companies-sns-topic-name}

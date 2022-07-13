@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import CompanyEntity from "../../domain/entities/CompanyEntity"
 import CompanyPort from "../../domain/ports/CompanyPort"
 import { CreateCompanyInputArgs } from '../../domain/useCases/CreateCompanyUseCase';
-import AWSDynamoDBService from '../services/AWSDynamoDBService';
+import DynamoDBService from '../services/DynamoDBService';
 
 export default class CompanyRepository implements CompanyPort {
     private _tableName: string
@@ -30,7 +30,7 @@ export default class CompanyRepository implements CompanyPort {
 
         const command = new PutItemCommand(input);
 
-        await AWSDynamoDBService.client.send(command)
+        await DynamoDBService.client.send(command)
 
         return item as CompanyEntity
     }
@@ -41,7 +41,7 @@ export default class CompanyRepository implements CompanyPort {
         }
 
         const command = new ScanCommand(input)
-        const commandOutput = await AWSDynamoDBService.client.send(command)
+        const commandOutput = await DynamoDBService.client.send(command)
 
         return commandOutput.Items
         ? commandOutput.Items.map(item => unmarshall(item) as CompanyEntity)
@@ -54,7 +54,7 @@ export default class CompanyRepository implements CompanyPort {
             Key: marshall({ id })
         }
 
-        await AWSDynamoDBService.client.send(
+        await DynamoDBService.client.send(
             new DeleteItemCommand(input)
         )
     }

@@ -27,6 +27,12 @@ provider:
           Resource:
             - { 'Fn::GetAtt': ['CompanyDynamoDBTable', 'Arn'] }
 
+        - Effect: Allow
+          Action:
+            - SNS:Publish
+          Resource:
+            - !Ref CompaniesSnsTopic
+
 functions:
   - ${file(serverless/functions/create-company.yml)}
   - ${file(serverless/functions/delete-company.yml)}
@@ -35,3 +41,4 @@ functions:
 resources:
   - ${file(serverless/resources/aws-amplify.yml)}
   - ${file(serverless/resources/aws-dynamodb-company-table.yml)}
+  - ${file(serverless/resources/aws-sns-companies-topic.yml)}
