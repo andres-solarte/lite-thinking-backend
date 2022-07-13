@@ -1,0 +1,37 @@
+service: backend
+
+frameworkVersion: '3'
+
+custom:
+  variables: ${file(serverless/variables.yml)}
+
+plugins:
+  - serverless-plugin-typescript
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  architecture: arm64
+  stage: ${opt:stage, 'dev'}
+  versionFunctions: false
+  environment: ${file(serverless/env.yml)}
+  stackTags: ${file(serverless/tags.yml)}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Scan
+            - dynamodb:PutItem
+            - dynamodb:DeleteItem
+          Resource:
+            - { 'Fn::GetAtt': ['CompanyDynamoDBTable', 'Arn'] }
+
+functions:
+  - ${file(serverless/functions/create-company.yml)}
+  - ${file(serverless/functions/delete-company.yml)}
+  - ${file(serverless/functions/list-companies.yml)}
+
+resources:
+  - ${file(serverless/resources/aws-amplify.yml)}
+  - ${file(serverless/resources/aws-dynamodb-company-table.yml)}

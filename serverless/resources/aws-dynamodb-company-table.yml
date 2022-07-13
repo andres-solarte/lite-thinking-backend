@@ -1,0 +1,15 @@
+Resources:
+  CompanyDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      TableName: ${self:custom.variables.backend-company-table-name}
+      Tags:
+        - Key: Name
+          Value: ${self:custom.variables.backend-company-table-name}

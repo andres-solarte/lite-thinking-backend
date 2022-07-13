@@ -1,0 +1,8 @@
+ListCompanies:
+  handler: src/application/handlers/company/ListCompaniesHandler.handler
+  timeout: 29
+  events:
+    - http:
+        path: /companies
+        method: get
+        cors: true

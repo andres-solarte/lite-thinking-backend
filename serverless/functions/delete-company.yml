@@ -1,0 +1,8 @@
+DeleteCompany:
+  handler: src/application/handlers/company/DeleteCompanyHandler.handler
+  timeout: 29
+  events:
+    - http:
+        path: /company/{nit}
+        method: delete
+        cors: true

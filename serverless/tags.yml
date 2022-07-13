@@ -1,0 +1,2 @@
+env: ${opt:stage}
+application: ${self:service}

@@ -1,0 +1,8 @@
+CreateCompany:
+  handler: src/application/handlers/company/CreateCompanyHandler.handler
+  timeout: 29
+  events:
+    - http:
+        path: /company
+        method: post
+        cors: true

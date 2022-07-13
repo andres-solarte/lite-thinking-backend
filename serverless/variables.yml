@@ -1,0 +1,2 @@
+amplify-app-name: sav-mvp-${self:provider.stage}-lite-thinking
+backend-company-table-name: ${self:service}-dynamodb-${self:provider.stage}-table-company

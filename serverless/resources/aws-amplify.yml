@@ -1,0 +1,53 @@
+Resources:
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      AccessToken: "{{resolve:secretsmanager:github/andres-solarte/amplify-access-token}}"
+      BuildSpec: |
+        version: 0.1
+        frontend:
+          phases:
+            preBuild:
+              commands:
+                - npm ci
+            build:
+              commands:
+                - echo "REACT_APP_ENV=$ENV" >> .env
+                - echo "REACT_APP_API_BASE_URL=$API_BASE_URL" >> .env
+                - npm run build
+            preTest:
+              commands:
+                - npm ci
+          artifacts:
+            baseDirectory: build
+            files:
+              - '**/*'
+          cache:
+            paths:
+              - node_modules/**/*
+      CustomRules:
+        - Source: /<*>
+          Status: 404-200
+          Target: /index.html
+      EnableBranchAutoDeletion: false
+      EnvironmentVariables:
+          - Name: ENV
+            Value: ${self:provider.stage}
+          - Name: API_BASE_URL
+            Value: !Sub
+              - "https://${ApiGatewayRestApiId}.execute-api.${AWSRegion}.amazonaws.com/${Stage}/"
+              - ApiGatewayRestApiId: !Ref ApiGatewayRestApi
+                AWSRegion: ${aws:region}
+                Stage: ${self:provider.stage}
+
+      Name: ${self:custom.variables.amplify-app-name}
+      Repository: 'https://github.com/andres-solarte/lite-thinking-frontend'
+
+  AmplifyBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: ${self:provider.stage}
+      EnableAutoBuild: true
+      EnablePullRequestPreview: true
+      Stage: "PRODUCTION"
